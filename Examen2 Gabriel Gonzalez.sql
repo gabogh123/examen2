@@ -26,38 +26,6 @@ create table ActoresXPelicula(
 )
 
 
-
--------TABLAS NO NECESARIAS-------------
-
-create table Pais(
-	ID int not null,
-	Nombre varchar(40)
-)
-
-create table Usuario(
-	Email varchar(60) not null,
-	Nombre varchar(40),
-	Apellido1 varchar(40),
-	Apellido2 varchar(40),
-	Password varchar(20),
-	FechaNacimiento datetime,
-	FechaIngreso datetime,
-	Pais int
-)
-
-create table PeliculasXUsuario(
-	IDPelicula int not null,
-	IDUsuario varchar(60) not null
-)
-
-create table Genero(
-	ID int not null,
-	Nombre varchar(40)
-)
-
-
---------FIN TABLAS NO NECESARIAS
-
 alter table Pelicula
 add constraint PK_Pelicula primary key (ID)
 
@@ -67,23 +35,6 @@ add constraint PK_Actor primary key (ID)
 alter table ActoresXPelicula
 add constraint PK_ActoresXPelicula primary key (IDPelicula,IDProtagonista)
 
-
---------PRIMARY KEYS NO NECESARIAS-----------
-
-
-alter table Pais
-add constraint PK_Pais primary key (ID)
-
-alter table Usuario
-add constraint PK_Usuario primary key (Email)
-
-alter table PeliculasXUsuario
-add constraint PK_PeliculasXUsuario primary key (IDPelicula,IDUsuario)
-
-alter table Genero
-add constraint PK_Genero primary key (ID)
-
---------FIN PRIMARY KEYS NO NECESARIAS-----------
 
 alter table Pelicula
 add constraint Pelicula_Pais_FK foreign key (PaisID)
@@ -105,23 +56,7 @@ alter table ActoresXPelicula
 add constraint ActoresXPelicula_Protagonista_FK foreign key (IDProtagonista)
 references Actor(ID)
 
---------FOREIGN KEYS NO NECESARIAS-----------
 
-
-alter table Usuario
-add constraint Usuario_Pais_FK foreign key (Pais)
-references Pais(ID)
-
-alter table PeliculasXUsuario
-add constraint PeliculasXUsuario_Pelicula_FK foreign key (IDPelicula)
-references Pelicula(ID)
-
-alter table PeliculasXUsuario
-add constraint PeliculasXUsuario_Usuario_FK foreign key (IDUsuario)
-references Usuario(Email)
-go
-
---------FIN FOREIGN KEYS NO NECESARIAS-----------
 
 ----Ejercicio 2 -----
 
@@ -151,15 +86,22 @@ go
 
 ----Ejercicio 4-----
 
-
-
-----Ejercicio 5-----
-
-select * from (Actor inner join ActoresXPelicula
-on Actor.ID = ActoresXPelicula.IDProtagonista)
-inner join Pelicula 
+create procedure delete_movie(@ID int) 
 
 go
+----Ejercicio 5-----
+
+
+select Actor.Nombre, Actor.Apellido, COUNT(*) as CantPeliculas, SUM(Duracion) as Duracion_Total ,AVG(Duracion) as Duracion_Promedio 
+from (Actor left join ActoresXPelicula
+on Actor.ID = ActoresXPelicula.IDProtagonista)
+inner join Pelicula on ActoresXPelicula.IDPelicula = Pelicula.ID
+group by  Actor.Nombre, Actor.Apellido
+order by Actor.Nombre, Actor.Apellido
+go
+
+
+
 
 ----Ejercicio 6-----
 
