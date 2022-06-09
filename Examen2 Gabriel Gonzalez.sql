@@ -84,11 +84,6 @@ end
 go
 
 
-----Ejercicio 4-----
-
-create procedure delete_movie(@ID int) 
-
-go
 ----Ejercicio 5-----
 
 
@@ -99,9 +94,6 @@ inner join Pelicula on ActoresXPelicula.IDPelicula = Pelicula.ID
 group by  Actor.Nombre, Actor.Apellido
 order by Actor.Nombre, Actor.Apellido
 go
-
-
-
 
 ----Ejercicio 6-----
 
